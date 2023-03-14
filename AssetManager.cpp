@@ -12,7 +12,7 @@ namespace Nikunj
 		}
 	}
 
-	sf::Texture& AssetManager::GetTexture(std::string textureName)
+	sf::Texture &AssetManager::GetTexture(std::string textureName)
 	{
 		return this->_textures.at(textureName);
 	}
@@ -27,7 +27,7 @@ namespace Nikunj
 		}
 	}
 
-	sf::Font& Nikunj::AssetManager::GetFont(std::string fontName)
+	sf::Font &Nikunj::AssetManager::GetFont(std::string fontName)
 	{
 		return this->_fonts.at(fontName);
 	}

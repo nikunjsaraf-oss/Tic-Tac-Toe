@@ -8,7 +8,7 @@ namespace Nikunj
 
         this->Run();
     }
-    
+
     void Game::Run()
     {
         float newTime, frameTime, interpolation;
@@ -22,7 +22,8 @@ namespace Nikunj
             newTime = this->_clock.getElapsedTime().asSeconds();
             frameTime = newTime - currentTime;
 
-            if (frameTime > 2.5f) {
+            if (frameTime > 2.5f)
+            {
                 frameTime = 2.5f;
             }
             currentTime = newTime;
@@ -33,7 +34,7 @@ namespace Nikunj
                 this->_data->machine.GetActiveState()->HandleInput();
                 this->_data->machine.GetActiveState()->Update(frameRate);
                 accumulator -= frameRate;
-            }   
+            }
 
             interpolation = accumulator / frameRate;
             this->_data->machine.GetActiveState()->Draw(interpolation);

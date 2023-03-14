@@ -2,7 +2,7 @@
 
 namespace Nikunj
 {
-	bool InputManager::IsSpriteClicked(sf::Sprite spriteObject, sf::Mouse::Button mouseButton, sf::RenderWindow& renderWindow)
+	bool InputManager::IsSpriteClicked(sf::Sprite spriteObject, sf::Mouse::Button mouseButton, sf::RenderWindow &renderWindow)
 	{
 		if (sf::Mouse::isButtonPressed(mouseButton))
 		{
@@ -16,7 +16,7 @@ namespace Nikunj
 		return false;
 	}
 
-	sf::Vector2i InputManager::GetMousePosition(sf::RenderWindow& renderWindow)
+	sf::Vector2i InputManager::GetMousePosition(sf::RenderWindow &renderWindow)
 	{
 		return sf::Mouse::getPosition(renderWindow);
 	}
