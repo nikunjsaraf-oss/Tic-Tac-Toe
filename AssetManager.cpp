@@ -2,7 +2,7 @@
 
 namespace Nikunj
 {
-	void Nikunj::AssetManager::LoadTexture(std::string textureName, std::string fileName)
+	void AssetManager::LoadTexture(std::string textureName, std::string fileName)
 	{
 		sf::Texture texture;
 
@@ -12,7 +12,7 @@ namespace Nikunj
 		}
 	}
 
-	sf::Texture& Nikunj::AssetManager::GetTexture(std::string textureName)
+	sf::Texture& AssetManager::GetTexture(std::string textureName)
 	{
 		return this->_textures.at(textureName);
 	}
