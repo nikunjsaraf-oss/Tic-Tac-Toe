@@ -3,6 +3,7 @@
 
 #include "MainMenuState.h"
 #include "Definitions.h"
+#include "GameState.h"
 
 namespace Nikunj
 {
@@ -45,7 +46,8 @@ namespace Nikunj
 
 			if (this->_data->inputManager.IsSpriteClicked(_playButton, sf::Mouse::Left, this->_data->renderWindow))
 			{
-				std::cout << "Go to Game screen"<<std::endl;
+
+				this->_data->machine.AddState(StateRef(new GameState(_data)), true);
 			}
 		}
 	}
