@@ -3,6 +3,7 @@
 
 #include "SplashState.h"
 #include "Definitions.h"
+#include "MainMenuState.h"
 
 namespace Nikunj
 {
@@ -32,8 +33,7 @@ namespace Nikunj
 	{
 		if (this->clock.getElapsedTime().asSeconds() > SPLASH_STATE_SHOW_TIME)
 		{
-			// Switch to main menu
-			std::cout << "Go to main menu";
+			this->_data->machine.AddState(StateRef(new MainMenuState(_data)), true);
 		}
 	}
 
