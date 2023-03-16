@@ -19,6 +19,7 @@ namespace Nikunj
 	private:
 
 		void InitGridPieces();
+		void CheckAndPlacePiece();
 
 		GameDataRef _data;
 		sf::Sprite _background;
@@ -30,6 +31,7 @@ namespace Nikunj
 
 		int turn;
 		int gameState;
+		int column, row;
 	};
 }
 

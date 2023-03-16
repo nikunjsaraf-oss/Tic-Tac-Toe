@@ -11,6 +11,8 @@ namespace Nikunj
 {
 	GameState::GameState(GameDataRef data) : _data(data)
 	{
+		this->column = 0;
+		this->row = 0;
 	}
 
 	void GameState::Init()
@@ -63,6 +65,10 @@ namespace Nikunj
 			{
 				this->_data->machine.AddState(StateRef(new PauseState(_data)), false);
 			}
+			else if (this->_data->inputManager.IsSpriteClicked(this->_gridSprite, sf::Mouse::Left, this->_data->renderWindow))
+			{
+				this->CheckAndPlacePiece();
+			}
 		}
 	}
 
@@ -80,7 +86,7 @@ namespace Nikunj
 
 		for (int x = 0; x < 3; x++)
 		{
-			for (int y = 0; y < 3; y++) 
+			for (int y = 0; y < 3; y++)
 			{
 				this->_data->renderWindow.draw(this->_gridPieces[x][y]);
 			}
@@ -103,6 +109,67 @@ namespace Nikunj
 
 				_gridPieces[x][y].setColor(sf::Color(255, 255, 255, 0));
 			}
+
+		}
+	}
+
+	void GameState::CheckAndPlacePiece()
+	{
+		sf::Vector2i touchPoint = this->_data->inputManager.GetMousePosition(this->_data->renderWindow);
+		sf::FloatRect gridSize = _gridSprite.getGlobalBounds();
+		sf::Vector2f gapOutsideOfGrid = sf::Vector2f((SCREEN_WIDTH - gridSize.width) / 2, (SCREEN_HEIGHT - gridSize.height) / 2);
+
+		sf::Vector2f gridLocalTouchPos = sf::Vector2f(touchPoint.x - gapOutsideOfGrid.x, touchPoint.y - gapOutsideOfGrid.y);
+
+		sf::Vector2f gridSectionSize = sf::Vector2f(gridSize.width / 3, gridSize.height / 3);
+
+		// Check which this->column the user has clicked
+		if (gridLocalTouchPos.x < gridSectionSize.x) // First this->column
+		{
+			this->column = 1;
+		}
+		else if (gridLocalTouchPos.x < gridSectionSize.x * 2) // Second this->column
+		{
+			this->column = 2;
+		}
+		else if (gridLocalTouchPos.x < gridSize.width) // Third this->column
+		{
+			this->column = 3;
+		}
+
+		// Check which this->row the user has clicked
+		if (gridLocalTouchPos.y < gridSectionSize.y) // First this->row
+		{
+			this->row = 1;
+		}
+		else if (gridLocalTouchPos.y < gridSectionSize.y * 2) // Second this->row
+		{
+			this->row = 2;
+		}
+		else if (gridLocalTouchPos.y < gridSize.height) // Third this->row
+		{
+			this->row = 3;
+		}
+
+
+		if (gridArray[this->column - 1][this->row - 1] == EMPTY_PIECE)
+		{
+			gridArray[this->column - 1][this->row - 1] = turn;
+
+			if (PLAYER_PIECE == turn)
+			{
+				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("X Piece"));
+
+				turn = AI_PIECE;
+			}
+			else if (AI_PIECE == turn)
+			{
+				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("O Piece"));
+
+				turn = PLAYER_PIECE;
+			}
+
+			_gridPieces[this->column - 1][this->row - 1].setColor(sf::Color(255, 255, 255, 255));
 		}
 	}
 }

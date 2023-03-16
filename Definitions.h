@@ -25,9 +25,10 @@ constexpr auto O_PIECE_FILEPATH = "./Resources/res/O.png";
 constexpr auto X_WINNING_PIECE_FILEPATH = "./Resources/res/X Win.png";
 constexpr auto O_WINNING_PIECE_FILEPATH = "./Resources/res/O Win.png";
 
+const auto EMPTY_PIECE = -1;
+
 const auto X_PIECE = UUIDGenerator::generate_uuid();
 const auto O_PIECE = UUIDGenerator::generate_uuid();
-const auto EMPTY_PIECE = UUIDGenerator::generate_uuid();
 const auto STATE_PLAYING = UUIDGenerator::generate_uuid();
 const auto STATE_PAUSED = UUIDGenerator::generate_uuid();
 const auto STATE_WON = UUIDGenerator::generate_uuid();
