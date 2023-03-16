@@ -26,6 +26,9 @@ namespace Nikunj
 		this->_data->assetManager.LoadTexture("X Piece", X_PIECE_FILEPATH);
 		this->_data->assetManager.LoadTexture("O Piece", O_PIECE_FILEPATH);
 
+		this->_data->assetManager.LoadTexture("X Winning Piece", X_WINNING_PIECE_FILEPATH);
+		this->_data->assetManager.LoadTexture("O Winning Piece", O_WINNING_PIECE_FILEPATH);
+
 		this->_data->assetManager.LoadTexture("Pause Button", PAUSE_BUTTON);
 
 		this->_background.setTexture(this->_data->assetManager.GetTexture("Game Background"));
@@ -67,7 +70,10 @@ namespace Nikunj
 			}
 			else if (this->_data->inputManager.IsSpriteClicked(this->_gridSprite, sf::Mouse::Left, this->_data->renderWindow))
 			{
-				this->CheckAndPlacePiece();
+				if (STATE_PLAYING == gameState)
+				{
+					this->CheckAndPlacePiece();
+				}
 			}
 		}
 	}
@@ -159,17 +165,72 @@ namespace Nikunj
 			if (PLAYER_PIECE == turn)
 			{
 				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("X Piece"));
-
+				this->CheckPlayerWon(turn);
 				turn = AI_PIECE;
 			}
 			else if (AI_PIECE == turn)
 			{
 				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("O Piece"));
-
+				this->CheckPlayerWon(turn);
 				turn = PLAYER_PIECE;
 			}
 
 			_gridPieces[this->column - 1][this->row - 1].setColor(sf::Color(255, 255, 255, 255));
+		}
+	}
+
+	void GameState::CheckPlayerWon(int turn)
+	{
+		CheckThreePiecesForMatch(0, 0, 1, 0, 2, 0, turn);
+		CheckThreePiecesForMatch(0, 1, 1, 1, 2, 1, turn);
+		CheckThreePiecesForMatch(0, 2, 1, 2, 2, 2, turn);
+		CheckThreePiecesForMatch(0, 0, 0, 1, 0, 2, turn);
+		CheckThreePiecesForMatch(1, 0, 1, 1, 1, 2, turn);
+		CheckThreePiecesForMatch(2, 0, 2, 1, 2, 2, turn);
+		CheckThreePiecesForMatch(0, 0, 1, 1, 2, 2, turn);
+		CheckThreePiecesForMatch(0, 2, 1, 1, 2, 0, turn);
+
+		int emptyNum = 9;
+
+		for (int x = 0; x < 3; x++)
+		{
+			for (int y = 0; y < 3; y++)
+			{
+				if (EMPTY_PIECE != this->gridArray[x][y])
+				{
+					emptyNum--;
+				}
+			}
+		}
+
+		if (emptyNum == 0 && (STATE_WON != gameState) && (STATE_LOSE != gameState))
+		{
+			gameState = STATE_DRAW;
+		}
+
+		if (STATE_DRAW == gameState || STATE_LOSE == gameState || STATE_WON == gameState)
+		{
+			std::cout << "Game Over" << std::endl;
+		}
+
+		std::cout << gameState << std::endl;
+	}
+
+	void GameState::CheckThreePiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck)
+	{
+		if (pieceToCheck == this->gridArray[x1][y1] &&
+			pieceToCheck == this->gridArray[x2][y2] &&
+			pieceToCheck == this->gridArray[x3][y3])
+		{
+			std::string winningPieceStr;
+
+			winningPieceStr = O_PIECE == pieceToCheck ? "O Winning Piece" : "X Winning Piece";
+
+			_gridPieces[x1][y1].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
+			_gridPieces[x2][y2].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
+			_gridPieces[x3][y3].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
+
+			gameState = PLAYER_PIECE == pieceToCheck ? STATE_WON : STATE_LOSE;
 		}
 	}
 }

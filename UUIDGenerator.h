@@ -2,28 +2,37 @@
 
 #include <iostream>
 #include <chrono>
-#include <random>
+#include <cstdlib>
 #include <string>
 
 class UUIDGenerator
 {
-
 public:
-	static int generate_uuid() {
+    static int generate_uuid() {
+        auto now = std::chrono::system_clock::now();
+        auto epoch = now.time_since_epoch();
 
-		auto now = std::chrono::system_clock::now();
-		auto epoch = now.time_since_epoch();
-		auto seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
-		auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(epoch - seconds);
+        uint64_t total_microseconds = epoch.count();
 
+        // Use FNV-1a hash function
+        const uint64_t FNV_offset_basis = 14695981039346656037ULL;
+        const uint64_t FNV_prime = 1099511628211ULL;
+        uint64_t hash = FNV_offset_basis;
 
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> dis(0, 9);
-		int random_number = dis(gen);
+        // Hash the total microseconds
+        for (int i = 0; i < 8; ++i) {
+            hash ^= (total_microseconds & 0xff);
+            hash *= FNV_prime;
+            total_microseconds >>= 8;
+        }
 
-		int uuid_hash = std::hash<int>{}(seconds.count() + microseconds.count() + random_number);
+        // Generate a random number using rand()
+        int random_number = rand() % 10;
 
-		return uuid_hash;
-	}
+        // Hash the random number
+        hash ^= random_number;
+        hash *= FNV_prime;
+
+        return static_cast<int>(hash);
+    }
 };
