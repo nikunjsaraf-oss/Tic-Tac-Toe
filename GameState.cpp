@@ -3,6 +3,7 @@
 
 #include "Definitions.h" 
 #include "GameState.h"
+#include "PauseState.h"
 
 
 namespace Nikunj
@@ -16,8 +17,10 @@ namespace Nikunj
 		gameState = STATE_PLAYING;
 		turn = PLAYER_PIECE;
 
+		this->_data->assetManager.LoadTexture("Game Background", GAME_BACKGROUND_FILEPATH);
+
 		this->_data->assetManager.LoadTexture("Pause Button", PAUSE_BUTTON);
-		this->_background.setTexture(this->_data->assetManager.GetTexture("Background"));
+		this->_background.setTexture(this->_data->assetManager.GetTexture("Game Background"));
 		_pauseButton.setTexture(this->_data->assetManager.GetTexture("Pause Button"));
 
 		_pauseButton.setPosition(this->_data->renderWindow.getSize().x - _pauseButton.getLocalBounds().width, _pauseButton.getPosition().y);
@@ -36,7 +39,7 @@ namespace Nikunj
 			}
 			if (this->_data->inputManager.IsSpriteClicked(this->_pauseButton, sf::Mouse::Left, this->_data->renderWindow))
 			{
-				std::cout << "Pause Game" << std::endl;
+				this->_data->machine.AddState(StateRef(new PauseState(_data)), false);
 			}
 		}
 	}

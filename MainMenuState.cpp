@@ -61,10 +61,10 @@ namespace Nikunj
 	{
 		this->_data->renderWindow.clear();
 		
-		this->_data->renderWindow.draw(_background);
-		this->_data->renderWindow.draw(_title);
-		this->_data->renderWindow.draw(_playButtonOuter);
-		this->_data->renderWindow.draw(_playButton);
+		this->_data->renderWindow.draw(this->_background);
+		this->_data->renderWindow.draw(this->_title);
+		this->_data->renderWindow.draw(this->_playButtonOuter);
+		this->_data->renderWindow.draw(this->_playButton);
 
 		this->_data->renderWindow.display();
 	}
