@@ -39,3 +39,4 @@ const auto STATE_DRAW = UUIDGenerator::generate_uuid();
 constexpr auto PAUSE_BACKGROUND_FILEPATH = "./Resources/res/Main Menu Background.png";
 constexpr auto RESUME_BUTTON = "./Resources/res/Resume Button.png";
 constexpr auto HOME_BUTTON = "./Resources/res/Home Button.png";
+constexpr auto RETRY_BUTTON = "./Resources/res/Retry Button.png";
