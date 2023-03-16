@@ -12,10 +12,10 @@ namespace Nikunj
 		~AssetManager() {}
 
 		void LoadTexture(std::string textureName, std::string fileName);
-		sf::Texture &GetTexture(std::string textureName);
+		sf::Texture& GetTexture(std::string textureName);
 
 		void LoadFont(std::string fontName, std::string fileName);
-		sf::Font &GetFont(std::string fontName);
+		sf::Font& GetFont(std::string fontName);
 
 	private:
 		std::map<std::string, sf::Texture> _textures;

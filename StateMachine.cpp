@@ -28,6 +28,7 @@ namespace Nikunj
 
 			this->_isRemoving = false;
 		}
+
 		if (this->_isAdding)
 		{
 			if (!this->_states.empty())
@@ -38,7 +39,7 @@ namespace Nikunj
 				}
 				else
 				{
-					this->_states.pop();
+					this->_states.top()->Pause();
 				}
 			}
 
@@ -48,7 +49,7 @@ namespace Nikunj
 		}
 	}
 
-	StateRef &StateMachine::GetActiveState()
+	StateRef& StateMachine::GetActiveState()
 	{
 		return this->_states.top();
 	}
