@@ -40,8 +40,7 @@ namespace Nikunj
 			}
 			if (this->_data->inputManager.IsSpriteClicked(this->_pauseButton, sf::Mouse::Left, this->_data->renderWindow))
 			{
-				//this->_data->machine.AddState(StateRef(new PauseState(_data)), false);
-				this->_data->machine.AddState(StateRef(new GameOverState(_data)), false);
+				this->_data->machine.AddState(StateRef(new PauseState(_data)), false);
 			}
 		}
 	}
