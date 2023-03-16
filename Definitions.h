@@ -40,3 +40,5 @@ constexpr auto PAUSE_BACKGROUND_FILEPATH = "./Resources/res/Main Menu Background
 constexpr auto RESUME_BUTTON = "./Resources/res/Resume Button.png";
 constexpr auto HOME_BUTTON = "./Resources/res/Home Button.png";
 constexpr auto RETRY_BUTTON = "./Resources/res/Retry Button.png";
+
+constexpr auto GRID_SPRITE = "./Resources/res/Grid.png";
