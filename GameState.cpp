@@ -20,6 +20,8 @@ namespace Nikunj
 		gameState = STATE_PLAYING;
 		turn = PLAYER_PIECE;
 
+		this->ai = new AI(turn, this->_data);
+
 		this->_data->assetManager.LoadTexture("Game Background", GAME_BACKGROUND_FILEPATH);
 
 		this->_data->assetManager.LoadTexture("Grid Sprite", GRID_SPRITE);
@@ -127,68 +129,81 @@ namespace Nikunj
 
 		sf::Vector2f gridLocalTouchPos = sf::Vector2f(touchPoint.x - gapOutsideOfGrid.x, touchPoint.y - gapOutsideOfGrid.y);
 
+		//std::cout << gridLocalTouchPos.x << ", " << gridLocalTouchPos.y << std::endl;
+
 		sf::Vector2f gridSectionSize = sf::Vector2f(gridSize.width / 3, gridSize.height / 3);
 
-		// Check which this->column the user has clicked
-		if (gridLocalTouchPos.x < gridSectionSize.x) // First this->column
+		int column, row;
+
+		// Check which column the user has clicked
+		if (gridLocalTouchPos.x < gridSectionSize.x) // First Column
 		{
-			this->column = 1;
+			column = 1;
 		}
-		else if (gridLocalTouchPos.x < gridSectionSize.x * 2) // Second this->column
+		else if (gridLocalTouchPos.x < gridSectionSize.x * 2) // Second Column
 		{
-			this->column = 2;
+			column = 2;
 		}
-		else if (gridLocalTouchPos.x < gridSize.width) // Third this->column
+		else if (gridLocalTouchPos.x < gridSize.width) // Third Column
 		{
-			this->column = 3;
+			column = 3;
 		}
 
-		// Check which this->row the user has clicked
-		if (gridLocalTouchPos.y < gridSectionSize.y) // First this->row
+		// Check which row the user has clicked
+		if (gridLocalTouchPos.y < gridSectionSize.y) // First Row
 		{
-			this->row = 1;
+			row = 1;
 		}
-		else if (gridLocalTouchPos.y < gridSectionSize.y * 2) // Second this->row
+		else if (gridLocalTouchPos.y < gridSectionSize.y * 2) // Second Row
 		{
-			this->row = 2;
+			row = 2;
 		}
-		else if (gridLocalTouchPos.y < gridSize.height) // Third this->row
+		else if (gridLocalTouchPos.y < gridSize.height) // Third Row
 		{
-			this->row = 3;
+			row = 3;
 		}
 
-
-		if (gridArray[this->column - 1][this->row - 1] == EMPTY_PIECE)
+		if (gridArray[column - 1][row - 1] == EMPTY_PIECE)
 		{
-			gridArray[this->column - 1][this->row - 1] = turn;
+			gridArray[column - 1][row - 1] = turn;
 
 			if (PLAYER_PIECE == turn)
 			{
-				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("X Piece"));
+				_gridPieces[column - 1][row - 1].setTexture(this->_data->assetManager.GetTexture("X Piece"));
+
 				this->CheckPlayerWon(turn);
-				turn = AI_PIECE;
-			}
-			else if (AI_PIECE == turn)
-			{
-				_gridPieces[this->column - 1][this->row - 1].setTexture(this->_data->assetManager.GetTexture("O Piece"));
-				this->CheckPlayerWon(turn);
-				turn = PLAYER_PIECE;
 			}
 
-			_gridPieces[this->column - 1][this->row - 1].setColor(sf::Color(255, 255, 255, 255));
+			_gridPieces[column - 1][row - 1].setColor(sf::Color(255, 255, 255, 255));
 		}
 	}
 
-	void GameState::CheckPlayerWon(int turn)
+	void GameState::CheckPlayerWon(int player)
 	{
-		CheckThreePiecesForMatch(0, 0, 1, 0, 2, 0, turn);
-		CheckThreePiecesForMatch(0, 1, 1, 1, 2, 1, turn);
-		CheckThreePiecesForMatch(0, 2, 1, 2, 2, 2, turn);
-		CheckThreePiecesForMatch(0, 0, 0, 1, 0, 2, turn);
-		CheckThreePiecesForMatch(1, 0, 1, 1, 1, 2, turn);
-		CheckThreePiecesForMatch(2, 0, 2, 1, 2, 2, turn);
-		CheckThreePiecesForMatch(0, 0, 1, 1, 2, 2, turn);
-		CheckThreePiecesForMatch(0, 2, 1, 1, 2, 0, turn);
+		Check3PiecesForMatch(0, 0, 1, 0, 2, 0, player);
+		Check3PiecesForMatch(0, 1, 1, 1, 2, 1, player);
+		Check3PiecesForMatch(0, 2, 1, 2, 2, 2, player);
+		Check3PiecesForMatch(0, 0, 0, 1, 0, 2, player);
+		Check3PiecesForMatch(1, 0, 1, 1, 1, 2, player);
+		Check3PiecesForMatch(2, 0, 2, 1, 2, 2, player);
+		Check3PiecesForMatch(0, 0, 1, 1, 2, 2, player);
+		Check3PiecesForMatch(0, 2, 1, 1, 2, 0, player);
+
+		if (STATE_WON != gameState)
+		{
+			gameState = STATE_AI_PLAYING;
+
+			ai->PlacePiece(&gridArray, _gridPieces, &gameState);
+
+			Check3PiecesForMatch(0, 0, 1, 0, 2, 0, AI_PIECE);
+			Check3PiecesForMatch(0, 1, 1, 1, 2, 1, AI_PIECE);
+			Check3PiecesForMatch(0, 2, 1, 2, 2, 2, AI_PIECE);
+			Check3PiecesForMatch(0, 0, 0, 1, 0, 2, AI_PIECE);
+			Check3PiecesForMatch(1, 0, 1, 1, 1, 2, AI_PIECE);
+			Check3PiecesForMatch(2, 0, 2, 1, 2, 2, AI_PIECE);
+			Check3PiecesForMatch(0, 0, 1, 1, 2, 2, AI_PIECE);
+			Check3PiecesForMatch(0, 2, 1, 1, 2, 0, AI_PIECE);
+		}
 
 		int emptyNum = 9;
 
@@ -196,41 +211,56 @@ namespace Nikunj
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				if (EMPTY_PIECE != this->gridArray[x][y])
+				if (EMPTY_PIECE != gridArray[x][y])
 				{
 					emptyNum--;
 				}
 			}
 		}
 
-		if (emptyNum == 0 && (STATE_WON != gameState) && (STATE_LOSE != gameState))
+		// check if the game is a draw
+		if (0 == emptyNum && (STATE_WON != gameState) && (STATE_LOSE != gameState))
 		{
 			gameState = STATE_DRAW;
 		}
 
+		// check if the game is over
 		if (STATE_DRAW == gameState || STATE_LOSE == gameState || STATE_WON == gameState)
 		{
-			std::cout << "Game Over" << std::endl;
+			// show game over
 		}
 
 		std::cout << gameState << std::endl;
 	}
 
-	void GameState::CheckThreePiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck)
+	void GameState::Check3PiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck)
 	{
-		if (pieceToCheck == this->gridArray[x1][y1] &&
-			pieceToCheck == this->gridArray[x2][y2] &&
-			pieceToCheck == this->gridArray[x3][y3])
+		if (pieceToCheck == gridArray[x1][y1] && pieceToCheck == gridArray[x2][y2] && pieceToCheck == gridArray[x3][y3])
 		{
 			std::string winningPieceStr;
 
-			winningPieceStr = O_PIECE == pieceToCheck ? "O Winning Piece" : "X Winning Piece";
+			if (O_PIECE == pieceToCheck)
+			{
+				winningPieceStr = "O Winning Piece";
+			}
+			else
+			{
+				winningPieceStr = "X Winning Piece";
+			}
 
 			_gridPieces[x1][y1].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
 			_gridPieces[x2][y2].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
 			_gridPieces[x3][y3].setTexture(this->_data->assetManager.GetTexture(winningPieceStr));
 
-			gameState = PLAYER_PIECE == pieceToCheck ? STATE_WON : STATE_LOSE;
+
+			if (PLAYER_PIECE == pieceToCheck)
+			{
+				gameState = STATE_WON;
+			}
+			else
+			{
+				gameState = STATE_LOSE;
+			}
 		}
 	}
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "UUIDGenerator.h"
-
 #define PLAYER_PIECE X_PIECE
 #define AI_PIECE O_PIECE
 
@@ -27,15 +25,16 @@ constexpr auto O_WINNING_PIECE_FILEPATH = "./Resources/res/O Win.png";
 
 const auto EMPTY_PIECE = -1;
 
-const auto X_PIECE = UUIDGenerator::generate_uuid();
-const auto O_PIECE = UUIDGenerator::generate_uuid();
-const auto STATE_PLAYING = UUIDGenerator::generate_uuid();
-const auto STATE_PAUSED = UUIDGenerator::generate_uuid();
-const auto STATE_WON = UUIDGenerator::generate_uuid();
-const auto STATE_LOSE = UUIDGenerator::generate_uuid();
-const auto STATE_PLACING_PIECE = UUIDGenerator::generate_uuid();
-const auto STATE_AI_PLAYING = UUIDGenerator::generate_uuid();
-const auto STATE_DRAW = UUIDGenerator::generate_uuid();
+constexpr auto X_PIECE = 8;
+constexpr auto O_PIECE = 0;
+constexpr auto STATE_PLAYING = 98;
+constexpr auto STATE_PAUSED = 97;
+constexpr auto STATE_WON = 96;
+constexpr auto STATE_LOSE = 95;
+constexpr auto STATE_PLACING_PIECE = 94;
+constexpr auto STATE_AI_PLAYING = 93;
+constexpr auto STATE_DRAW = 92;
+
 
 constexpr auto PAUSE_BACKGROUND_FILEPATH = "./Resources/res/Main Menu Background.png";
 constexpr auto RESUME_BUTTON = "./Resources/res/Resume Button.png";

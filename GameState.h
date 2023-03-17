@@ -2,6 +2,7 @@
 
 #include<SFML/Graphics.hpp>
 
+#include "AI.h"
 #include"State.h"
 #include"Game.h"
 
@@ -21,7 +22,7 @@ namespace Nikunj
 		void InitGridPieces();
 		void CheckAndPlacePiece();
 		void CheckPlayerWon(int turn);
-		void CheckThreePiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck);
+		void Check3PiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck);
 
 		GameDataRef _data;
 		sf::Sprite _background;
@@ -34,6 +35,8 @@ namespace Nikunj
 		int turn;
 		int gameState;
 		int column, row;
+
+		AI* ai;
 	};
 }
 
