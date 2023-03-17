@@ -30,13 +30,15 @@ namespace Nikunj
 		sf::Sprite _gridSprite;
 		sf::Sprite _gridPieces[3][3];
 
-		int gridArray[3][3];
+		int _gridArray[3][3];
 
-		int turn;
-		int gameState;
+		int _turn;
+		int _gameState;
 		int column, row;
 
 		AI* ai;
+
+		sf::Clock _clock;
 	};
 }
 

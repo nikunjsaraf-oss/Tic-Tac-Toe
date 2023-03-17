@@ -17,10 +17,10 @@ namespace Nikunj
 
 	void GameState::Init()
 	{
-		gameState = STATE_PLAYING;
-		turn = PLAYER_PIECE;
+		_gameState = STATE_PLAYING;
+		_turn = PLAYER_PIECE;
 
-		this->ai = new AI(turn, this->_data);
+		this->ai = new AI(_turn, this->_data);
 
 		this->_data->assetManager.LoadTexture("Game Background", GAME_BACKGROUND_FILEPATH);
 
@@ -51,7 +51,7 @@ namespace Nikunj
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				gridArray[x][y] = EMPTY_PIECE;
+				_gridArray[x][y] = EMPTY_PIECE;
 			}
 		}
 	}
@@ -72,7 +72,7 @@ namespace Nikunj
 			}
 			else if (this->_data->inputManager.IsSpriteClicked(this->_gridSprite, sf::Mouse::Left, this->_data->renderWindow))
 			{
-				if (STATE_PLAYING == gameState)
+				if (STATE_PLAYING == _gameState)
 				{
 					this->CheckAndPlacePiece();
 				}
@@ -82,6 +82,13 @@ namespace Nikunj
 
 	void GameState::Update(float dt)
 	{
+		if (STATE_DRAW == _gameState || STATE_LOSE == _gameState || STATE_WON == _gameState)
+		{
+			if (this->_clock.getElapsedTime().asSeconds() > TIME_BEFORE_SHOWING_GAME_OVER)
+			{
+				this->_data->machine.AddState(StateRef(new GameOverState(_data)), true);
+			}
+		}
 	}
 
 	void GameState::Draw(float dt)
@@ -163,15 +170,15 @@ namespace Nikunj
 			row = 3;
 		}
 
-		if (gridArray[column - 1][row - 1] == EMPTY_PIECE)
+		if (_gridArray[column - 1][row - 1] == EMPTY_PIECE)
 		{
-			gridArray[column - 1][row - 1] = turn;
+			_gridArray[column - 1][row - 1] = _turn;
 
-			if (PLAYER_PIECE == turn)
+			if (PLAYER_PIECE == _turn)
 			{
 				_gridPieces[column - 1][row - 1].setTexture(this->_data->assetManager.GetTexture("X Piece"));
 
-				this->CheckPlayerWon(turn);
+				this->CheckPlayerWon(_turn);
 			}
 
 			_gridPieces[column - 1][row - 1].setColor(sf::Color(255, 255, 255, 255));
@@ -189,11 +196,11 @@ namespace Nikunj
 		Check3PiecesForMatch(0, 0, 1, 1, 2, 2, player);
 		Check3PiecesForMatch(0, 2, 1, 1, 2, 0, player);
 
-		if (STATE_WON != gameState)
+		if (STATE_WON != _gameState)
 		{
-			gameState = STATE_AI_PLAYING;
+			_gameState = STATE_AI_PLAYING;
 
-			ai->PlacePiece(&gridArray, _gridPieces, &gameState);
+			ai->PlacePiece(&_gridArray, _gridPieces, &_gameState);
 
 			Check3PiecesForMatch(0, 0, 1, 0, 2, 0, AI_PIECE);
 			Check3PiecesForMatch(0, 1, 1, 1, 2, 1, AI_PIECE);
@@ -211,7 +218,7 @@ namespace Nikunj
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				if (EMPTY_PIECE != gridArray[x][y])
+				if (EMPTY_PIECE != _gridArray[x][y])
 				{
 					emptyNum--;
 				}
@@ -219,23 +226,21 @@ namespace Nikunj
 		}
 
 		// check if the game is a draw
-		if (0 == emptyNum && (STATE_WON != gameState) && (STATE_LOSE != gameState))
+		if (0 == emptyNum && (STATE_WON != _gameState) && (STATE_LOSE != _gameState))
 		{
-			gameState = STATE_DRAW;
+			_gameState = STATE_DRAW;
 		}
 
 		// check if the game is over
-		if (STATE_DRAW == gameState || STATE_LOSE == gameState || STATE_WON == gameState)
+		if (STATE_DRAW == _gameState || STATE_LOSE == _gameState || STATE_WON == _gameState)
 		{
-			// show game over
+			this->_clock.restart(); 
 		}
-
-		std::cout << gameState << std::endl;
 	}
 
 	void GameState::Check3PiecesForMatch(int x1, int y1, int x2, int y2, int x3, int y3, int pieceToCheck)
 	{
-		if (pieceToCheck == gridArray[x1][y1] && pieceToCheck == gridArray[x2][y2] && pieceToCheck == gridArray[x3][y3])
+		if (pieceToCheck == _gridArray[x1][y1] && pieceToCheck == _gridArray[x2][y2] && pieceToCheck == _gridArray[x3][y3])
 		{
 			std::string winningPieceStr;
 
@@ -255,11 +260,11 @@ namespace Nikunj
 
 			if (PLAYER_PIECE == pieceToCheck)
 			{
-				gameState = STATE_WON;
+				_gameState = STATE_WON;
 			}
 			else
 			{
-				gameState = STATE_LOSE;
+				_gameState = STATE_LOSE;
 			}
 		}
 	}

@@ -42,3 +42,5 @@ constexpr auto HOME_BUTTON = "./Resources/res/Home Button.png";
 constexpr auto RETRY_BUTTON = "./Resources/res/Retry Button.png";
 
 constexpr auto GRID_SPRITE = "./Resources/res/Grid.png";
+
+constexpr auto TIME_BEFORE_SHOWING_GAME_OVER = 3;
